@@ -1,1 +1,36 @@
+# CTR & Engagement Opportunity Scoring for Search Ranking Optimization
 
+## Title + Abstract
+This study addresses the identification of search discoverability gaps using performance logs. We applied an Engagement Opportunity Scoring methodology to prioritize pages with high visibility but lower-than-expected click-through rates (CTR). Using DuckDB for data manipulation, we engineered impression-weighted opportunity scores. A Random Forest Regressor was trained on search position and impression signals to predict baseline and expected CTR. The resulting model significantly outperforms the naive baseline, providing a data-driven framework for targeted SEO content interventions.
+
+## Introduction / Problem Statement
+Maximizing search discoverability requires identifying content that captures user attention effectively relative to its position. Standard rank tracking often misses pages that rank reasonably well but suffer from poor user engagement or unoptimized meta titles and descriptions. This project focuses on building an automated scoring model to detect and rank engagement opportunities, enabling marketing and technical teams to prioritize high-impact page updates.
+
+## Data
+The dataset evaluates search query logs containing page paths, search queries, total impressions, clicks, and average search positions. 
+* **Filters Applied:** Excluded low-volume queries with fewer than 50 total impressions to eliminate statistical noise.
+* **Target Variable:** Click-Through Rate ($CTR = \frac{Clicks}{Impressions}$).
+* **Feature Engineering:** Calculated `Opportunity Score = Impressions * (1 - CTR)`.
+
+## Methodology
+Data was split into training (80%) and testing (20%) sets to ensure rigorous evaluation without data leakage. 
+* **Baseline Model:** Naive mean predictor estimating CTR using the training target's mean value.
+* **Evaluated Model:** Random Forest Regressor trained using average ranking position and total impressions as predictors.
+
+## Results
+* **Baseline Model:** MSE = 0.039506 | R² Score = -0.0012
+* **Random Forest Model:** MSE = 0.015676 | R² Score = 0.6027
+
+The Random Forest model demonstrated strong predictive capabilities, capturing the non-linear relationship between search position and click-through dynamics.
+
+## Limitations & Honest Framing
+The current model relies solely on historical impression and position metrics. It does not account for seasonal traffic shifts, SERP feature presence (such as featured snippets or image carousels), or query intent nuances. Recommendations are directional decision-support indicators rather than causal guarantees.
+
+## Ranked Recommendations
+1. Focus meta-tag optimizations on pages exhibiting top-decile Opportunity Scores.
+2. Review title tags for queries ranking in positions 1–5 that exhibit CTRs below the predicted benchmark.
+3. Conduct content refresh cycles for queries with high impressions but low click conversion.
+
+## Reproducibility & Acknowledgments
+All data processing scripts and notebooks are maintained in the repository under `/work`.
+* **Data Credit:** Built on the FlyRank ML Internship dataset (https://flyrank.ai).
